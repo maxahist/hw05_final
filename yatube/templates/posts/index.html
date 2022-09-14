@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block header %}
+  <title>{{ title }}</title>
+{% endblock %}
+
+{% block content %}
+{% include 'posts/includes/switcher.html' %}
+<main>
+  <div class="container py-5">
+    <h1>{{ title_body }}</h1>
+    {% for post in page_obj %}
+    {% include 'includes/post_display.html' %}
+    {% endfor %}
+  </div>
+</main>
+  {% include 'posts/includes/paginator.html' %}
+{% endblock %}

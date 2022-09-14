@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% block header %}Об авторе проекта{% endblock %}
+{% block content %}
+<h1>Привет, я автор</h1>
+<p>
+    Учусь бэкэнду на Яндекс Практикум.<br>
+    В данный момент создаю проект Yatube!<br>
+    Дальше - больше &#128512;
+</p>
+<img src="{% static 'img/cup.jpg' %}" height="300" width="200" border="5" hspace="10" alt="моя кружка">
+<p>
+    <i>А это моя кружка)</i>
+</p>
+{% endblock %}
