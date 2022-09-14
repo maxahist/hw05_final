@@ -1,6 +1,5 @@
 import shutil
 import tempfile
-import time
 
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase, override_settings
@@ -228,7 +227,8 @@ class ViewTest(TestCase):
         )
         response = self.auth_client.get(reverse('posts:post_detail',
                                                 kwargs={'post_id': post.id}))
-        self.assertEqual(response.context['post_comments'][0].text, comment.text)
+        self.assertEqual(response.context['post_comments'][0].text,
+                         comment.text)
 
     def test_index_cache(self):
         """Проверяем работу кэширования страницы"""
@@ -246,15 +246,16 @@ class ViewTest(TestCase):
 
     def test_following(self):
         """Проверяем работу подписки на / отписки от пользователя"""
+        kwargs = {'username': ViewTest.user}
         response = self.auth_client.get(reverse('posts:profile_follow',
-                                                kwargs={'username': ViewTest.user}),
+                                                kwargs=kwargs),
                                         follow=True)
         self.assertRedirects(response, reverse('posts:main'))
         self.assertTrue(Follow.objects.filter(user=self.user,
                                               author=ViewTest.user).exists())
 
         response = self.auth_client.get(reverse('posts:profile_unfollow',
-                                                kwargs={'username': ViewTest.user}),
+                                                kwargs=kwargs),
                                         follow=True)
         self.assertRedirects(response, reverse('posts:main'))
         self.assertFalse(Follow.objects.filter(user=self.user,

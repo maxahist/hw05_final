@@ -61,7 +61,7 @@ def profile(request, username):
     try:
         if Follow.objects.filter(user=request.user, author=user).exists():
             following = True
-    except:
+    except Exception:
         pass
 
     if request.user == user:
@@ -150,8 +150,9 @@ def follow_index(request):
     template = 'posts/follow.html'
     user = request.user
 
-    posts_list = Post.objects.filter(author__following__user=user).order_by('-pub_date')
-    page_obj =paginator(request, posts_list)
+    posts_list = Post.objects.filter(
+        author__following__user=user).order_by('-pub_date')
+    page_obj = paginator(request, posts_list)
     context = {
         'page_obj': page_obj,
     }
@@ -165,12 +166,10 @@ def profile_follow(request, username):
     if user != author:
         if not Follow.objects.filter(
                 user=User.objects.get(username=user),
-                author=User.objects.get(username=username)
-    ).exists():
+                author=User.objects.get(username=username)).exists():
             Follow.objects.create(
                 user=User.objects.get(username=user),
-                author=User.objects.get(username=username),
-                )
+                author=User.objects.get(username=username))
     return redirect('posts:main')
 
 

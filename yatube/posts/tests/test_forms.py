@@ -180,8 +180,8 @@ class CreateFormTest(TestCase):
     def test_guest_client_comment(self):
         """Проверка создания комментария неавторизованым пользователем"""
         comment_count = Comment.objects.count()
-        response = self.guest_client.post(reverse('posts:add_comment',
-                                                  kwargs={'post_id': 1}),
-                                          data={'text': 'Гостевой комментарий'},
-                                          follow=True)
+        self.guest_client.post(reverse('posts:add_comment',
+                                       kwargs={'post_id': 1}),
+                               data={'text': 'Гостевой коммент'},
+                               follow=True)
         self.assertEqual(Comment.objects.count(), comment_count)
