@@ -56,7 +56,8 @@ class StaticURLTests(TestCase):
         for path in path_list:
             with self.subTest(reversed_name=path):
                 response = self.guest_client.get(path, follow=True)
-                self.assertRedirects(response, f'{reverse("users:login")}?next={path}')
+                self.assertRedirects(response, f'{reverse("users:login")}'
+                                               f'?next={path}')
 
     def test_unexisting_page(self):
         """Проверяем доступ на несуществующую страницу"""

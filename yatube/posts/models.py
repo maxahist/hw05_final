@@ -8,11 +8,11 @@ class Group(models.Model):
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     slug = models.SlugField(unique=True)
     description = models.TextField(verbose_name='Описание')
-    
+
     class Meta:
         verbose_name = 'Группа'
         verbose_name_plural = 'Группы'
-        
+
     def __str__(self):
         return self.title
 
@@ -39,12 +39,12 @@ class Post(models.Model):
         upload_to='posts/',
         blank=True
     )
-    
+
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
         ordering = ['-pub_date']
-        
+
     def __str__(self):
         return self.text[:15]
 
