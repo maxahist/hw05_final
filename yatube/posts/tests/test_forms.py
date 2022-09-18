@@ -1,12 +1,13 @@
+from http import HTTPStatus
 import shutil
 import tempfile
-from http import HTTPStatus
 
+from django.conf import settings
+from django.core.cache import cache
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth import get_user_model
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
-from django.contrib.auth import get_user_model
-from django.conf import settings
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 from ..models import Comment, Group, Post
 
@@ -20,7 +21,6 @@ class CreateFormTest(TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.user = User.objects.create_user(username='Tester')
         cls.group = Group.objects.create(
             title='Тестовый Заголовок',
             slug='slug',
@@ -30,11 +30,6 @@ class CreateFormTest(TestCase):
             title='Измененный Заголовок',
             slug='changed_slug',
             description='Измененное описание'
-        )
-        Post.objects.create(
-            author=cls.user,
-            text='Тестовый текст',
-            group=cls.group
         )
 
     @classmethod
@@ -51,6 +46,7 @@ class CreateFormTest(TestCase):
             author=self.user,
             text='Тестовый'
         )
+        cache.clear()
 
     def test_create_form(self):
         """ Проверяем создание поста авторизованым пользователем,
@@ -87,7 +83,8 @@ class CreateFormTest(TestCase):
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertRedirects(response,
-                             f'{reverse("users:login")}?next=/create/')
+                             f'{reverse("users:login")}?next='
+                             f'{reverse("posts:post_create")}')
         self.assertEqual(Post.objects.count(), post_count)
 
     def test_post_edit_form(self):
@@ -139,7 +136,7 @@ class CreateFormTest(TestCase):
         )
         path = reverse("posts:post_edit", kwargs={"post_id": post.id})
         self.assertRedirects(response,
-                             f'/auth/login/?next={path}')
+                             f'{reverse("users:login")}?next={path}')
 
         self.assertEqual(Post.objects.count(), post_count)
         self.assertFalse(
@@ -176,6 +173,8 @@ class CreateFormTest(TestCase):
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(Post.objects.count(), post_count + 1)
+        self.assertEqual(Post.objects.latest('pub_date').image,
+                         'posts/image.gif')
 
     def test_guest_client_comment(self):
         """Проверка создания комментария неавторизованым пользователем"""

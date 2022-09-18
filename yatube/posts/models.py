@@ -8,7 +8,11 @@ class Group(models.Model):
     title = models.CharField(max_length=200, verbose_name='Заголовок')
     slug = models.SlugField(unique=True)
     description = models.TextField(verbose_name='Описание')
-
+    
+    class Meta:
+        verbose_name = 'Группа'
+        verbose_name_plural = 'Группы'
+        
     def __str__(self):
         return self.title
 
@@ -35,7 +39,12 @@ class Post(models.Model):
         upload_to='posts/',
         blank=True
     )
-
+    
+    class Meta:
+        verbose_name = 'Пост'
+        verbose_name_plural = 'Посты'
+        ordering = ['-pub_date']
+        
     def __str__(self):
         return self.text[:15]
 
@@ -55,6 +64,14 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True,
                                    verbose_name='Дата комментария')
 
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['-created']
+
+    def __str__(self):
+        return self.text
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
@@ -71,8 +88,13 @@ class Follow(models.Model):
     )
 
     class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "author"],
                 name="unique_user_author")
         ]
+
+    def __str__(self):
+        return f'{self.user} подписан на {self.author}'

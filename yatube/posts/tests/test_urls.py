@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from ..models import Post, Group
+from ..models import Group, Post
 
 User = get_user_model()
 
@@ -56,7 +56,7 @@ class StaticURLTests(TestCase):
         for path in path_list:
             with self.subTest(reversed_name=path):
                 response = self.guest_client.get(path, follow=True)
-                self.assertRedirects(response, f'/auth/login/?next={path}')
+                self.assertRedirects(response, f'{reverse("users:login")}?next={path}')
 
     def test_unexisting_page(self):
         """Проверяем доступ на несуществующую страницу"""
