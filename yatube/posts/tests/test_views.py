@@ -200,12 +200,12 @@ class ViewTest(TestCase):
             text='Тест Изображения',
             image=uploaded
         )
-        path_list = [reverse('posts:main'),
+        path_list = (reverse('posts:main'),
                      reverse('posts:profile',
                              kwargs={'username': ViewTest.user.username}),
                      reverse('posts:blog',
                              kwargs={'slug': ViewTest.group.slug})
-                     ]
+                     )
 
         for path in path_list:
             with self.subTest(reverse_name=path):

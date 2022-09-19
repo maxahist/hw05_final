@@ -10,7 +10,7 @@ class AboutTest(TestCase):
 
     def test_about_url(self):
         """Проверяем доступ на страницы для всех пользователей"""
-        path_list = [reverse('about:author'), reverse('about:tech')]
+        path_list = (reverse('about:author'), reverse('about:tech'))
         for path in path_list:
             with self.subTest(reverse_name=path):
                 response = self.guest_client.get(path)

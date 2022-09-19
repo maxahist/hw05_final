@@ -4,9 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from ..models import Group, Post
-
-User = get_user_model()
+from ..models import Group, Post, User
 
 
 class StaticURLTests(TestCase):
@@ -36,11 +34,11 @@ class StaticURLTests(TestCase):
 
     def test_guest_access(self):
         """Проверяем доступ к страницам, неавторизованому пользователю"""
-        path_list = [reverse('posts:post_detail',
+        path_list = (reverse('posts:post_detail',
                              kwargs={'post_id': Post.objects.get(
                                  text='Текст').id}),
                      reverse('posts:profile', kwargs={'username': 'Tester'}),
-                     reverse('posts:blog', kwargs={'slug': 'slug'})]
+                     reverse('posts:blog', kwargs={'slug': 'slug'}))
 
         for path in path_list:
             with self.subTest(reverse_name=path):
@@ -49,10 +47,10 @@ class StaticURLTests(TestCase):
 
     def test_guest_redirect(self):
         """Проверяем переадресацию неавторизованого пользователя"""
-        path_list = [reverse('posts:post_edit',
+        path_list = (reverse('posts:post_edit',
                              kwargs={'post_id': Post.objects.get(
                                  text='Текст').id}),
-                     reverse('posts:post_create')]
+                     reverse('posts:post_create'))
         for path in path_list:
             with self.subTest(reversed_name=path):
                 response = self.guest_client.get(path, follow=True)
@@ -67,10 +65,10 @@ class StaticURLTests(TestCase):
     def test_post_edit_and_create(self):
         """Проверяем доступ авторизованого пользователя на страницы создания
         и редактирования поста"""
-        path_list = [reverse('posts:post_create'),
+        path_list = (reverse('posts:post_create'),
                      reverse('posts:post_edit',
                              kwargs={'post_id': Post.objects.get(
-                                 text='Текст').id})]
+                                 text='Текст').id}))
         for path in path_list:
             with self.subTest(reversed_name=path):
                 response = self.auth_client.get(path)
