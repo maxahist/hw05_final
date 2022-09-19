@@ -4,7 +4,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_page
 
 from core.constants.constants import (get_object_or_none,
-    ELEMENTS_PER_PAGE, CACHE_SECONDS)
+                                      ELEMENTS_PER_PAGE,
+                                      CACHE_SECONDS)
 from .forms import CommentForm, PostForm
 from .models import Comment, Follow, Group, Post, User
 
